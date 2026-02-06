@@ -6,14 +6,14 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-# Copy prisma schema
+# Copy prisma schema for generation
 COPY prisma ./prisma/
-
-# Generate Prisma client
-RUN npx prisma generate
 
 # Copy source code
 COPY . .
+
+# Generate Prisma client
+RUN npx prisma generate
 
 # Build the application
 RUN npm run build

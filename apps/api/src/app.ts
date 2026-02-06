@@ -33,6 +33,15 @@ async function buildServer() {
     },
   })
 
+  // JWT Authentication decorator
+  app.decorate("authenticate", async (request: any, reply: any) => {
+    try {
+      await request.jwtVerify()
+    } catch (err) {
+      reply.status(401).send({ error: "Unauthorized" })
+    }
+  })
+
   // Swagger Documentation
   await app.register(swagger, {
     openapi: {
