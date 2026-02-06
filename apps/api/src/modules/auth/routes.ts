@@ -36,7 +36,7 @@ export const authRoutes: FastifyPluginAsync = async (app: FastifyInstance) => {
       const passwordHash = await bcrypt.hash(data.password, 12)
       
       // Create restaurant and user
-      const result = await app.prisma.$transaction(async (tx) => {
+      const result = await app.prisma.$transaction(async (tx: any) => {
         // Create restaurant
         const restaurant = await tx.restaurant.create({
           data: {
@@ -157,8 +157,9 @@ export const authRoutes: FastifyPluginAsync = async (app: FastifyInstance) => {
 
   // GET /api/v1/auth/me
   app.get("/me", { onRequest: [app.authenticate] }, async (request, reply) => {
+    const userId = (request.user as any).userId
     const user = await app.prisma.user.findUnique({
-      where: { id: request.user.userId },
+      where: { id: userId },
       include: { restaurant: true },
       select: {
         id: true,
